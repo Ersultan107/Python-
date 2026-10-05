@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><title>Сандық сейф — разбор Python-кода</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#0d0f14;--card:rgba(255,255,255,.06);--bd:rgba(255,255,255,.12);--tx:#f2f4f8;--mu:#9aa3b2;--ac:#22d3a6;--bad:#ff6b6b;--hl:rgba(34,211,166,.18);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{--bg:#f4f6fa;--card:#fff;--bd:#d8dde6;--tx:#111;--mu:#556}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#0d0f14}}
+html{scroll-behavior:smooth;scroll-padding-top:70px}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 20% 0,#12303a,#0d0f14 45%) fixed;color:var(--tx);font:16px/1.55 system-ui,sans-serif}
+nav{position:sticky;top:0;z-index:9;background:rgba(13,15,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:6px;padding:8px 12px;flex-wrap:wrap}
+nav b{color:var(--ac);margin-right:auto}nav a{color:var(--mu);text-decoration:none;padding:6px 9px;border-radius:8px;font-size:14px}nav a:hover{background:var(--card);color:var(--tx)}
+#burger{display:none;background:none;border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:4px 10px;font-size:18px}
+#links{display:flex;flex-wrap:wrap}#bar{position:fixed;top:0;left:0;height:3px;background:var(--ac);width:0;z-index:20}
+@media(max-width:760px){#burger{display:block}#links{display:none;width:100%;flex-direction:column}#links.o{display:flex}}
+section{max-width:960px;margin:0 auto;padding:44px 16px}h1{font-size:clamp(28px,6vw,48px);margin:.2em 0}h2{font-size:26px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;backdrop-filter:blur(8px);transition:.2s}.card:hover{transform:translateY(-2px);border-color:var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.btn{background:var(--ac);color:#04221a;border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;margin:4px 4px 4px 0;font-size:15px;text-decoration:none;display:inline-block}.btn.g{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.mu{color:var(--mu)}.big{font-size:44px;letter-spacing:8px}
+pre{margin:0;overflow-x:auto;background:#090b10;border:1px solid var(--bd);border-radius:12px;padding:8px 0;font-size:13px;max-height:420px;overflow-y:auto}
+.ln{display:block;padding:0 12px;cursor:pointer;white-space:pre;color:#dfe6f2;font-family:ui-monospace,Menlo,monospace;min-height:1.5em}.ln:hover{background:rgba(255,255,255,.06)}.ln.on{background:var(--hl);box-shadow:inset 3px 0 var(--ac)}
+.ln i{color:#5b6475;font-style:normal;display:inline-block;width:2.4em;user-select:none}.kw{color:#c792ea}.st{color:#a5e075}.fn{color:#7cc7ff}.nm{color:#ffb86c}
+.cells{display:flex;gap:6px;margin:6px 0}.c{width:42px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--bd);font:700 20px monospace;background:var(--card)}.c.ok{background:rgba(34,211,166,.3);border-color:var(--ac)}.c.mid{background:rgba(255,200,60,.3);border-color:#ffc83c}.c.no{background:rgba(255,107,107,.25)}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{border-bottom:1px solid var(--bd);padding:6px;text-align:left}td.v{font-family:monospace;color:var(--ac)}
+input[type=text],textarea{background:#090b10;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;font:inherit;width:100%}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;cursor:pointer;font:inherit}.opt:hover{border-color:var(--ac)}.opt.r{background:rgba(34,211,166,.3)}.opt.w{background:rgba(255,107,107,.3)}
+.bw{height:10px;background:var(--bd);border-radius:6px;overflow:hidden}.bw div{height:100%;background:var(--ac);width:0;transition:.4s}
+.cmd{cursor:pointer}.cmd code{color:var(--ac)}.cmd .d{display:none;margin-top:8px}.cmd.o .d{display:block}
+code{font-family:ui-monospace,monospace}label.ck{display:block;padding:6px 0;cursor:pointer}
+html{-webkit-text-size-adjust:100%}.btn{transition:.2s}.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+@media(max-width:480px){section{padding:30px 12px}.c{width:38px;height:42px}.big{font-size:32px;letter-spacing:4px}h2{font-size:22px}table{font-size:12px}td,th{padding:4px}.btn{padding:9px 12px}}
+</style></head><body><div id="bar"></div>
+<nav><b>🔐 Сейф</b><button id="lg" class="btn g" onclick="setL()" style="padding:6px 10px;margin:0 6px">ҚАЗ</button><button id="burger" onclick="links.classList.toggle('o')">☰</button><div id="links" onclick="links.classList.remove('o')">
+<a href="#home">Главная</a><a href="#task">Задание</a><a href="#code">Код</a><a href="#funcs">Функции</a><a href="#cmds">Команды</a><a href="#trace">Пошагово</a><a href="#why">Почему</a><a href="#quiz">Учитель и тест</a><a href="#ready">Готов</a></div></nav>
+
+<section id="home"><div class="card"><div class="mu">Python для новичка</div><h1>Сандық сейф — разбор Python-кода</h1><p style="font-size:18px">Пойми каждую строку. Подготовься к защите.</p>
+<div class="big">🔐 ••••</div><p class="mu">7 попыток</p><a class="btn" href="#task">Начать обучение</a><a class="btn g" href="#code">Разобрать код</a>
+<p class="mu">4 функции · 7 попыток · for · while · if/elif/else · списки · % и //</p>
+<div class="mu" style="margin-top:12px">Прогресс (отмечено в чек-листе)</div><div class="bw"><div id="pg"></div></div></div></section>
+
+<section id="task"><h2>Условие задания</h2>
+<div class="grid"><div class="card">🔐 Секретный код<br><span class="mu">программа случайно загадывает число</span></div><div class="card">🎯 7 попыток<br><span class="mu">потом «Сейф бұғатталды!»</span></div><div class="card">🔢 4 цифры<br><span class="mu">1000–9999</span></div><div class="card">🔄 Цифры могут повторяться</div><div class="card">📍 Проверка позиции<br><span class="mu">цифра на своём месте?</span></div><div class="card">🔎 Цифра в другом месте<br><span class="mu">есть в коде, но не там</span></div></div>
+<div class="card" style="margin-top:14px"><b>Пример:</b> секрет 5832, ввод 5238
+<div class="cells"><div class="c">5</div><div class="c">8</div><div class="c">3</div><div class="c">2</div></div><div class="cells"><div class="c ok">5</div><div class="c mid">2</div><div class="c ok">3</div><div class="c mid">8</div></div>
+<p class="mu">5 и 3 — правильное место. 2 и 8 есть в коде, но стоят не там. Нельзя: <code>str()</code> и готовое сравнение строк — цифры берём через <code>%</code> и <code>//</code>.</p></div></section>
+
+<section id="code"><h2>Полный код — нажимай на любую строку</h2>
+<pre id="pre"></pre>
+<div class="card" id="expl" style="margin-top:12px"><span class="mu">Нажми на строку кода 👆</span></div></section>
+
+<section id="funcs"><h2>Разбор функций</h2><div id="fcards" class="grid" style="grid-template-columns:1fr"></div>
+<div class="card" style="margin-top:14px"><b>Анимация: cifrlarğa_bolu(kod)</b><div><input id="dk" type="text" inputmode="numeric" value="5832" maxlength="4" style="width:110px"> <button class="btn" onclick="digAnim()">▶ Разбить на цифры</button></div><div id="da" class="mu" style="margin-top:8px"></div><div id="dc" class="cells"></div></div></section>
+
+<section id="cmds"><h2>Команды, которые нужно знать</h2><p class="mu">Нажми карточку.</p><div id="cm" class="grid"></div></section>
+
+<section id="trace"><h2>Пошаговый разбор программы</h2>
+<div class="card">Секрет <input id="ts" type="text" inputmode="numeric" value="5832" maxlength="4" style="width:90px"> Ввод <input id="tg" type="text" inputmode="numeric" value="5238" maxlength="4" style="width:90px"> <button class="btn" onclick="startTrace()">Запустить пошагово</button><div id="terr" class="mu"></div></div>
+<div id="tr" style="display:none"><div class="card" style="margin-top:12px"><button class="btn g" onclick="mv(-1)">← Назад</button><button class="btn" onclick="mv(1)">Следующая строка →</button> <span id="tn" class="mu"></span>
+<pre id="tcode" style="max-height:140px;margin-top:8px"></pre><h3 id="tt" style="margin:10px 0 4px"></h3><div id="tx"></div><div id="tcl"></div></div>
+<div class="card" style="margin-top:12px"><b>Таблица переменных</b><table id="vt"></table></div></div></section>
+
+<section id="why"><h2>Почему именно так?</h2><div id="wy"></div></section>
+
+<section id="quiz"><h2>Режим «Учитель» и тест</h2><div class="card"><div id="qs" class="mu"></div><h3 id="qq"></h3><div id="qo"></div><div id="qf"></div><button class="btn g" id="qn" onclick="nextQ()" style="display:none">Дальше →</button><button class="btn g" onclick="shuffleQ()">🔀 Новый случайный вопрос</button></div>
+<div class="card" style="margin-top:14px"><b>Объясни своими словами</b><p>Что делает строка <code>paydalanilgan_jasyrin[i] = True</code>?</p><textarea id="ex" rows="3" placeholder="Напиши своими словами..."></textarea><button class="btn" onclick="chk()">Проверить</button><div id="exr"></div></div></section>
+
+<section id="ready"><h2>Я готов к защите</h2><div class="card" id="ck"></div></section>
+
+<script>
+const $=id=>document.getElementById(id);
+const CODE=`import random
+
+
+def kod_zhasau():
+    return random.randint(1000, 9999)
+
+
+def cifrlarğa_bolu(kod):
+    cifrlar = [0, 0, 0, 0]
+
+    for i in range(3, -1, -1):
+        cifrlar[i] = kod % 10
+        kod //= 10
+
+    return cifrlar
+
+
+def cifrlar_salystru(kod, engizilgen_kod):
+    jasyrin = cifrlarğa_bolu(kod)
+    engizilgen = cifrlarğa_bolu(engizilgen_kod)
+
+    durys_orinda = 0
+    basqa_orinda = 0
+
+    paydalanilgan_jasyrin = [False, False, False, False]
+    paydalanilgan_engizilgen = [False, False, False, False]
+
+    for i in range(4):
+        if jasyrin[i] == engizilgen[i]:
+            durys_orinda += 1
+            paydalanilgan_jasyrin[i] = True
+            paydalanilgan_engizilgen[i] = True
+
+    for i in range(4):
+        if paydalanilgan_engizilgen[i] == False:
+            for j in range(4):
+                if paydalanilgan_jasyrin[j] == False:
+                    if engizilgen[i] == jasyrin[j]:
+                        basqa_orinda += 1
+                        paydalanilgan_jasyrin[j] = True
+                        paydalanilgan_engizilgen[i] = True
+                        break
+
+    return durys_orinda, basqa_orinda, engizilgen, jasyrin
+
+
+def natizhe_shygaru(durys_orinda, basqa_orinda, engizilgen, jasyrin):
+    for i in range(4):
+        if engizilgen[i] == jasyrin[i]:
+            print(i + 1, "-цифр: дұрыс")
+        else:
+            print(i + 1, "-цифр: қате")
+
+    print("Дұрыс орында:", durys_orinda)
+    print("Басқа орында тұрған:", basqa_orinda)
+
+    if durys_orinda == 4:
+        print("Код ашылды!")
+        return True
+
+    elif durys_orinda + basqa_orinda == 4:
+        print("Барлық цифр дұрыс, бірақ орындарын ауыстыру керек.")
+
+    else:
+        print("Код толық дұрыс емес.")
+
+    return False
+
+
+jasyrin_kod = kod_zhasau()
+
+areket = 0
+ashylgan = False
+
+while areket < 7:
+    engizilgen_kod = int(input("Кодты енгізіңіз: "))
+
+    if engizilgen_kod < 1000 or engizilgen_kod > 9999:
+        print("4 таңбалы код енгізіңіз!")
+        continue
+
+    areket += 1
+
+    durys_orinda, basqa_orinda, engizilgen, jasyrin = cifrlar_salystru(
+        jasyrin_kod,
+        engizilgen_kod
+    )
+
+    ashylgan = natizhe_shygaru(
+        durys_orinda,
+        basqa_orinda,
+        engizilgen,
+        jasyrin
+    )
+
+    if ashylgan:
+        print("Әрекет саны:", areket)
+        break
+
+if ashylgan == False:
+    print("Сейф бұғатталды!")
+    print("Әрекет саны:", areket)`.split("\n");
+
+// [подстрока строки, ЧТО, ЗАЧЕМ, ЕСЛИ УБРАТЬ, пример]
+const E=[
+["import random","Подключаем модуль random — набор команд для случайных чисел.","Без него компьютер не умеет загадывать случайный код.","Ошибка: random is not defined в kod_zhasau.",""],
+["def kod_zhasau","def — «создай функцию». Это мини-программа с именем, которую можно вызвать.","Чтобы код создания числа жил в одном месте.","Не будет функции создания кода — нарушено задание.",""],
+["return random.randint","randint(1000, 9999) выбирает случайное целое от 1000 до 9999 (оба включены). return — «отдай результат наружу».","1000 — самое маленькое 4-значное число, 9999 — самое большое.","Без return функция отдаст None (пустоту), и кода не будет.","Результат, например: 5832"],
+["def cifrlarğa_bolu","Функция получает число kod и вернёт список из 4 цифр.","Нужно сравнивать цифры по одной, а str() нельзя.","Без неё нет способа достать цифры.","5832 → [5, 8, 3, 2]"],
+["cifrlar = [0, 0, 0, 0]","Создаём список из 4 нулей — пустые «ячейки».","Чтобы потом положить цифры в ячейки по номеру i.","cifrlar[i] = ... упадёт: нет такой ячейки.","[0,0,0,0]"],
+["for i in range(3, -1, -1)","Повторяем 4 раза, i получает 3, 2, 1, 0 (конец −1 не входит, шаг −1).","Мы берём цифры с КОНЦА числа, значит заполняем список с конца.","С range(4) цифры лягут задом наперёд: 5832 → [2,3,8,5].","i: 3 → 2 → 1 → 0"],
+["cifrlar[i] = kod % 10","% — остаток от деления. kod % 10 — последняя цифра числа. Кладём её в ячейку i.","Так получаем цифру математически, без str().","Список останется из нулей.","5832 % 10 = 2"],
+["kod //= 10","// — целое деление (без остатка). Это то же, что kod = kod // 10: отбрасываем последнюю цифру.","Чтобы на следующем круге последней цифрой стала уже следующая.","Цикл будет брать одну и ту же цифру 4 раза.","5832 // 10 = 583"],
+["return cifrlar","Отдаём готовый список наружу.","Вызвавшая функция получит цифры.","Вернётся None — сравнивать будет нечего.",""],
+["def cifrlar_salystru","Главная функция-«мозг»: сравнивает секрет и ввод, считает совпадения.","Вся логика игры в одном месте.","Нечего вызывать в while.",""],
+["jasyrin = cifrlarğa_bolu","Функция вызывает функцию: превращаем секретный код в список цифр.","Задание требует, чтобы функции вызывали друг друга.","Секрет останется числом — по клеточкам не сравнить.","[5, 8, 3, 2]"],
+["engizilgen = cifrlarğa_bolu","То же самое для числа пользователя.","Чтобы сравнивать цифра с цифрой.","Нет списка цифр пользователя.","[5, 2, 3, 8]"],
+["durys_orinda = 0","Счётчик «цифра на своём месте». Сначала 0.","Нужно посчитать, сколько таких.","Нельзя делать += 1: переменной нет.",""],
+["basqa_orinda = 0","Счётчик «цифра есть, но не на своём месте».","Второй результат игры.","Не посчитаем цифры в других позициях.",""],
+["paydalanilgan_jasyrin = [","Список из 4 False: False = «эту цифру ещё не использовали», True = «уже использовали». Это для секретного кода.","Одну и ту же цифру нельзя засчитать дважды.","Одна цифра засчитается несколько раз — результат неверный.","[F,F,F,F]"],
+["paydalanilgan_engizilgen = [","То же самое для цифр пользователя.","Не засчитать цифру пользователя дважды.","Одна цифра пользователя найдёт несколько пар.","[F,F,F,F]"],
+["for i in range(4)","Перебираем позиции 0,1,2,3 (i — номер позиции).","Проверяем каждую позицию по очереди.","Проверим только одну позицию или упадём.","i: 0,1,2,3"],
+["if jasyrin[i] == engizilgen[i]","== значит «равно?» (один = — присвоить!). Сравниваем цифры на одной и той же позиции i.","Так находим цифры на правильных местах.","Не найдём точные совпадения.","5==5 True, 8==2 False"],
+["durys_orinda += 1","+= 1 — «увеличь на 1». То же, что durys_orinda = durys_orinda + 1.","Считаем точные попадания.","Счётчик всегда 0.",""],
+["paydalanilgan_jasyrin[i] = True","Ставим True в ячейку i: эту цифру секрета уже использовали.","Пятёрку, нашедшую пару на своём месте, нельзя засчитать ещё раз во втором цикле.","Эта цифра будет посчитана повторно как «в другом месте».","[T,F,F,F]"],
+["paydalanilgan_engizilgen[i] = True","Отмечаем: эта цифра пользователя уже учтена.","Чтобы второй цикл её пропустил.","Цифра пользователя будет искаться снова — ошибка в счёте.",""],
+["if paydalanilgan_engizilgen[i] == False","Берём только цифры пользователя, которые ещё НЕ учтены.","Не трогаем уже совпавшие.","Совпавшие цифры посчитаются ещё раз.",""],
+["for j in range(4)","Вложенный цикл: i — какая цифра пользователя, j — с какой цифрой секрета её сравниваем. Имена i и j — просто имена, можно x и y.","Ищем цифру пользователя в ЛЮБОМ месте секрета.","Не найдём цифры, стоящие не там.","i=1 (цифра 2): j=0..3"],
+["if paydalanilgan_jasyrin[j] == False","Смотрим только свободные цифры секрета.","Одну цифру секрета нельзя использовать дважды.","Одна секретная цифра засчитается много раз.",""],
+["if engizilgen[i] == jasyrin[j]","Совпала ли цифра пользователя с цифрой секрета на позиции j?","Это и есть поиск «в другом месте».","Нечего считать как basqa_orinda.","2 == 2 → да"],
+["basqa_orinda += 1","Нашли цифру в другом месте — счётчик +1.","Результат для игрока.","Счётчик останется 0.",""],
+["paydalanilgan_jasyrin[j] = True","Отмечаем найденную цифру секрета как использованную.","Чтобы другая такая же цифра пользователя её не «украла».","Дубликаты посчитаются неверно.",""],
+["paydalanilgan_engizilgen[i] = True","Отмечаем цифру пользователя как учтённую.","Чтобы не искать для неё пару снова.","Лишний счёт.",""],
+["break","break — «выйди из ближайшего цикла сразу». Выходим из for j.","Пара найдена — дальше искать для этой цифры не нужно.","Одна цифра пользователя может найти несколько пар в секрете.",""],
+["return durys_orinda, basqa_orinda","Возвращаем сразу 4 значения (кортеж): два счёта и два списка.","Следующая функция получит всё для вывода.","Вывод результата не получит данных.",""],
+["def natizhe_shygaru","Функция печатает результат и возвращает True/False.","Отделяем «посчитать» от «показать».","Игрок не увидит результат.",""],
+["print(i + 1","i + 1: компьютер считает позиции с 0, а человеку показываем 1, 2, 3, 4.","Чтобы игрок видел «1-я цифра», а не «0-я».","Нумерация начнётся с 0 — странно для человека.","i=0 → «1»"],
+["if durys_orinda == 4","if — «если». Все 4 на месте — код разгадан.","Победное условие.","Победа не обнаружится.",""],
+["return True","Сообщаем наружу: «код открыт».","Цикл while узнает, что пора остановиться.","while не поймёт, что игрок выиграл.",""],
+["elif","elif — «а если иначе, но…» Проверяется, только если первое if не сработало. Все цифры есть, но не на своих местах.","Отдельное сообщение для почти-победы.","Выведется общее сообщение «не угадан».",""],
+["else:","else — «во всех остальных случаях».","Запасной вариант.","Не будет текста для обычного случая.",""],
+["return False","Код не открыт.","while продолжит игру.","Вернётся None, который тоже считается как False, но так писать неаккуратно.",""],
+["jasyrin_kod = kod_zhasau()","Вызываем функцию и сохраняем секретное число.","Загадываем код один раз за игру.","Сравнивать будет не с чем.",""],
+["areket = 0","Счётчик попыток. Сначала 0.","Считаем, сколько попыток потрачено.","while не сработает: переменной нет.",""],
+["ashylgan = False","Флаг «сейф открыт?». Пока False.","Проверим его после цикла.","После while будет ошибка.",""],
+["while areket < 7","while — «пока условие истинно, повторяй». Пока попыток меньше 7.","Мы не знаем заранее, сколько раз пользователь введёт число — поэтому while, а не for.","Игра не ограничена по попыткам.","0..6 → 7 кругов"],
+["int(input(","input() всегда даёт текст. int() превращает его в число.","Чтобы сравнивать < и > и брать % и //.","Сравнение текста с числом упадёт с ошибкой.","'5238' → 5238"],
+["if engizilgen_kod < 1000 or","or — «или»: плохо, если меньше 1000 ИЛИ больше 9999. Тогда это не 4-значное число.","Проверка ввода.","Можно будет ввести 52 или 12345.","52 → ошибка"],
+["continue","continue — «пропусти остаток круга и начни следующий».","Неправильный ввод НЕ тратит попытку.","Программа пойдёт считать неверное число и потратит попытку.",""],
+["areket += 1","Попытка засчитана (+1).","Считаем только корректные попытки: поэтому ПОСЛЕ проверки диапазона.","Если поставить до проверки, ошибки ввода сжигали бы попытки.",""],
+["cifrlar_salystru(","Вызываем «мозг», передаём секре
