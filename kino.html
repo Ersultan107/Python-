@@ -1,0 +1,328 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><title>Кинотеатр — Python: интерактивный разбор</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#0d0f14;--cd:rgba(255,255,255,.06);--bd:rgba(255,255,255,.13);--tx:#f2f4f8;--mu:#9aa3b2;--ac:#ff9f43;--ok:#22d3a6;--bad:#ff6b6b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:56px;-webkit-text-size-adjust:100%;background:var(--bg)}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 80% 0,#3a2410,#0d0f14 45%) fixed,#0d0f14;color:var(--tx);font:16px/1.55 system-ui,sans-serif}
+nav{position:sticky;top:0;z-index:9;background:rgba(13,15,20,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);display:flex;gap:4px;padding:8px 10px;overflow-x:auto;white-space:nowrap}
+nav a{color:var(--mu);text-decoration:none;padding:6px 10px;border-radius:8px;font-size:14px}nav a:hover{background:var(--cd);color:var(--tx)}
+section{max-width:960px;margin:0 auto;padding:34px 14px}h1{font-size:clamp(26px,6vw,42px);margin:.2em 0}h2{font-size:23px;margin:0 0 12px}
+.cd{background:var(--cd);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px;transition:.2s}.cd:hover{border-color:var(--ac)}
+.btn{background:var(--ac);color:#2a1500;border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer;margin:3px 3px 3px 0;font:inherit;font-weight:700;font-size:15px;display:inline-block;text-decoration:none;line-height:1.25;text-align:center;transition:.2s}.btn.g{background:var(--cd);color:var(--tx);border:1px solid var(--bd)}.btn:hover{filter:brightness(1.1)}
+.mu{color:var(--mu)}code,pre{font-family:ui-monospace,Menlo,monospace}
+pre{margin:0;background:#090b10;border:1px solid var(--bd);border-radius:12px;padding:8px 0;font-size:12.5px;max-height:380px;overflow:auto}
+.ln{display:block;padding:0 10px;white-space:pre;min-height:1.5em;cursor:pointer;color:#dfe6f2}.ln:hover{background:rgba(255,255,255,.05)}.ln.on{background:rgba(255,159,67,.18);box-shadow:inset 3px 0 var(--ac)}.ln i{color:#5b6475;font-style:normal;display:inline-block;width:2.6em;user-select:none}
+.t:hover{background:rgba(255,159,67,.3);border-radius:3px}.t.s{background:rgba(255,159,67,.5);border-radius:3px}.kw{color:#c792ea}.st{color:#a5e075}.nm{color:#ffb86c}
+.tbl{overflow-x:auto}table{border-collapse:collapse;font:12px monospace}td,th{border:1px solid var(--bd);padding:4px 6px;text-align:center;min-width:42px}th{color:var(--mu);font-weight:400}td.z{cursor:pointer}td.z:hover{background:rgba(255,159,67,.3)}td.sel,td.h{background:rgba(255,159,67,.4)}td.sold{color:var(--ok)}
+input[type=number]{background:#090b10;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:9px;width:90px;font:inherit}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;background:var(--cd);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;cursor:pointer;font:inherit}.opt:hover{border-color:var(--ac)}.opt.r{background:rgba(34,211,166,.3)}.opt.w{background:rgba(255,107,107,.3)}
+.flow span{display:inline-block;background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:4px 9px;margin:3px}.q{cursor:pointer}.q .a{display:none;margin-top:8px}.q.o .a{display:block}
+.v{font-family:monospace;color:var(--ok)}:focus-visible{outline:2px solid var(--ac)}
+@media(max-width:480px){section{padding:26px 10px}.btn{padding:10px 12px}}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.row .btn{margin:0}.cd{overflow-wrap:anywhere}.tbl{overflow-wrap:normal}
+@media(max-width:480px){.row .btn{flex:1 1 44%}}
+</style></head><body>
+<nav><a href="#top">Главная</a><a href="#code">Код</a><a href="#lists">3 списка</a><a href="#run">Работа</a><a href="#cash">Касса</a><a href="#menu">Меню</a><a href="#ret">return</a><a href="#all">Объяснить всё</a><a href="#quiz">Проверка</a><a href="#teach">Вопросы</a></nav>
+<section id="top"><div class="cd"><div class="mu">Python для новичка</div><h1>🎬 Кинотеатр — Python</h1><p>Интерактивный разбор: нажимай на любую строку и на любую часть строки.</p><div class="row"><a class="btn" href="#code">Разобрать код</a><a class="btn g" href="#run">▶ Показать работу</a><a class="btn g" href="#teach">🎓 Вопросы</a><a class="btn g" href="#quiz">📝 Проверка</a></div></div></section>
+
+<section id="code"><h2>Код — нажимай на строки и слова</h2><pre id="pre"></pre><div class="cd" id="ex" style="margin-top:10px"><span class="mu">Нажми на строку 👆 или на отдельное слово/знак в ней.</span></div></section>
+
+<section id="lists"><h2>Три списка: seats, ticket_count, paid_money</h2><p class="mu">Это три ряда ячеек. У места №17 во всех трёх рядах лежит ячейка с индексом 16. Нажми на номер места.</p><div class="cd tbl" id="lt"></div><div class="cd" id="li"><span class="mu">Нажми на номер места в таблице.</span></div></section>
+
+<section id="run"><h2>▶ Показать работу программы</h2><div class="cd">Место № <input type="number" id="sn" min="0" max="35" value="17"> <button class="btn" onclick="go('buy')">▶ Купить</button><button class="btn g" onclick="go('ret')">↩ Вернуть</button><button class="btn g" onclick="rst()">Сброс списков</button>
+<div class="mu">Попробуй: 17 (свободно), потом ещё раз 17 (занято), 0 (ошибка).</div></div>
+<div class="cd" id="rs" style="display:none"><button class="btn g" onclick="mv(-1)">← Назад</button><button class="btn" onclick="mv(1)">Дальше →</button> <span id="rn" class="mu"></span><pre id="rc" style="max-height:60px;margin:8px 0"></pre><h3 id="rt" style="margin:6px 0"></h3><div id="rx"></div></div></section>
+
+<section id="cash"><h2>Касса: цикл for i in range(30)</h2><div class="cd"><button class="btn" onclick="cs(1)">▶ Следующее место</button><button class="btn g" onclick="cs(-99)">Сначала</button><div id="co" style="margin-top:8px"></div></div></section>
+
+<section id="menu"><h2>Меню: while True</h2><div class="cd"><div class="flow"><span>Меню</span>→<span>выбор</span>→<span>if/elif</span>→<span>функция</span>→<span>снова меню</span>… 6 → <span>break</span> → <span>конец</span></div><p class="mu">Нажми пункт меню:</p><div id="mb"></div><div id="mo" class="cd"></div></div>
+<div class="cd"><b>while True:</b> — «бесконечно повторяй меню». Условие True всегда верно, поэтому цикл сам не закончится. <b>break</b> — «полностью выйти из цикла»: он срабатывает только при выборе 6.</div></section>
+
+<section id="ret"><h2>Функции и return</h2><div id="fn"></div>
+<div class="cd"><b>Важно про этот код:</b> в главном цикле написано <code>buy_ticket(seats, ticket_count, paid_money)</code> — без <code>x = …</code>. Значит, число, которое вернула функция (<code>return price</code> или <code>return 0</code>), никуда не сохраняется и дальше не используется. Работа функции видна по другому: она сама изменила списки и сама напечатала текст. Это нормально — в этом решении return просто «заканчивает функцию».
+<br><button class="btn g" onclick="alt.style.display='block'">Можно сделать иначе</button><div id="alt" style="display:none" class="mu">Можно было бы писать <code>cash = cash + buy_ticket(...)</code> и хранить сумму в переменной. Но в твоём решении так не сделано, и менять ничего не нужно.</div></div></section>
+
+<section id="all"><h2>🧠 Объяснить весь код</h2><div class="cd"><button class="btn g" onclick="al(-1)">← Назад</button><button class="btn" onclick="al(1)">Дальше →</button><h3 id="at"></h3><div id="ax"></div></div></section>
+
+<section id="quiz"><h2>📝 Разбери сам</h2><div class="cd"><div id="qs" class="mu"></div><pre id="qc" style="max-height:70px;margin:8px 0"></pre><h3 id="qq" style="margin:6px 0">Что здесь происходит?</h3><div id="qo"></div><div id="qf"></div><button class="btn g" id="qn" style="display:none" onclick="nq()">Дальше →</button></div></section>
+
+<section id="teach"><h2>🎓 Вопросы преподавателя</h2><p class="mu">Нажми вопрос: сначала подсказка, потом ответ.</p><div id="tq"></div></section>
+
+<script>
+const $=id=>document.getElementById(id);
+const CODE=`def show_seats(seats):
+    print("Орындар:")
+
+    for i in range(30):
+        if seats[i] == 0:
+            print(i + 1, "- Бос")
+        else:
+            print(i + 1, "- Сатылған")
+
+
+def buy_ticket(seats, ticket_count, paid_money):
+    seat = int(input("Орын нөмірін енгізіңіз: "))
+
+    if seat < 1 or seat > 30:
+        print("Орын нөмірі 1-ден 30-ға дейін болуы керек.")
+        return 0
+
+    index = seat - 1
+
+    if seats[index] == 1:
+        print("Бұл орын бұрын сатылған.")
+        return 0
+
+    if seat >= 1 and seat <= 10:
+        price = 1500
+    elif seat >= 11 and seat <= 20:
+        price = 2000
+    else:
+        price = 2500
+
+    seats[index] = 1
+    ticket_count[index] = 1
+    paid_money[index] = price
+
+    print("Билет сатылды.")
+    print("Бағасы:", price, "тг")
+
+    return price
+
+
+def return_ticket(seats, ticket_count, paid_money):
+    seat = int(input("Қайтарылатын орын нөмірін енгізіңіз: "))
+
+    if seat < 1 or seat > 30:
+        print("Орын нөмірі 1-ден 30-ға дейін болуы керек.")
+        return 0
+
+    index = seat - 1
+
+    if seats[index] == 0:
+        print("Бұл орын бос.")
+        return 0
+
+    money = paid_money[index]
+
+    seats[index] = 0
+    ticket_count[index] = 0
+    paid_money[index] = 0
+
+    print("Билет қайтарылды.")
+    print("Кассаға қайтарылды:", money, "тг")
+
+    return money
+
+
+def seat_info(seats, ticket_count, paid_money):
+    seat = int(input("Орын нөмірін енгізіңіз: "))
+
+    if seat < 1 or seat > 30:
+        print("Орын нөмірі 1-ден 30-ға дейін болуы керек.")
+        return
+
+    index = seat - 1
+
+    print("Орын:", seat)
+
+    if seats[index] == 0:
+        print("Статус: Бос")
+        print("Бағасы: 0 тг")
+    else:
+        print("Статус: Сатылған")
+        print("Билет саны:", ticket_count[index])
+        print("Бағасы:", paid_money[index], "тг")
+
+
+def cash_report(seats, ticket_count, paid_money):
+    sold = 0
+    free = 0
+    money = 0
+
+    sector1 = 0
+    sector2 = 0
+    sector3 = 0
+
+    for i in range(30):
+        if seats[i] == 1:
+            sold += 1
+            money += paid_money[i]
+
+            if i + 1 >= 1 and i + 1 <= 10:
+                sector1 += 1
+            elif i + 1 >= 11 and i + 1 <= 20:
+                sector2 += 1
+            else:
+                sector3 += 1
+        else:
+            free += 1
+
+    if sector1 >= sector2 and sector1 >= sector3:
+        popular_sector = "1-10"
+    elif sector2 >= sector1 and sector2 >= sector3:
+        popular_sector = "11-20"
+    else:
+        popular_sector = "21-30"
+
+    print("Сатылған билеттер:", sold)
+    print("Бос орындар:", free)
+    print("Жалпы түскен ақша:", money, "тг")
+    print("Ең көп сатылған сектор:", popular_sector)
+
+
+seats = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+ticket_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+paid_money = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+
+while True:
+    print()
+    print("1 - Бос орындарды көрсету")
+    print("2 - Билет сатып алу")
+    print("3 - Билетті қайтару")
+    print("4 - Орын туралы ақпарат")
+    print("5 - Касса есебі")
+    print("6 - Бағдарламадан шығу")
+
+    choice = int(input("Таңдаңыз: "))
+
+    if choice == 1:
+        show_seats(seats)
+
+    elif choice == 2:
+        buy_ticket(seats, ticket_count, paid_money)
+
+    elif choice == 3:
+        return_ticket(seats, ticket_count, paid_money)
+
+    elif choice == 4:
+        seat_info(seats, ticket_count, paid_money)
+
+    elif choice == 5:
+        cash_report(seats, ticket_count, paid_money)
+
+    elif choice == 6:
+        print("Бағдарлама аяқталды.")
+        break
+
+    else:
+        print("Қате таңдау.")`.split("\n");
+const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+// Объяснения строк: [подстрока, текст]
+const LE=[["def show_seats","def создаёт свою функцию. show_seats — её имя. В скобках seats — параметр: список, с которым она будет работать. Простыми словами: «отдельная команда показать места»."],
+["def buy_ticket","Создаём команду «купить билет» и передаём ей ТРИ списка: seats (занято/свободно), ticket_count (сколько билетов), paid_money (сколько заплатили). Это параметры — «коробки», в которые при вызове кладут настоящие списки."],
+["def return_ticket","Команда «вернуть билет», получает те же три списка."],["def seat_info","Команда «информация о месте», получает три списка."],["def cash_report","Команда «отчёт кассы», получает три списка."],
+["print(\"Орындар:\")","print() печатает текст на экран. Здесь — заголовок."],
+["for i in range(30)","for — «повтори для каждого значения». range(30) даёт числа 0,1,…,29 (30 штук; 30 не входит). i получает их по очереди: i=0 — место 1, i=29 — место 30."],
+["if seats[i] == 0","seats[i] — ячейка номер i в списке seats. == значит «равно ли?». 0 = место свободно. Если ячейка равна 0 — место свободно."],
+["print(i + 1, \"- Бос\")","i + 1: Python считает ячейки с 0, а людям места нужны с 1. Печатаем «1 - Бос», «2 - Бос»…"],["else:","else — «иначе»: если условие выше не подошло, делаем это."],
+["seat = int(input(","input() спрашивает у пользователя и даёт ТЕКСТ. int() превращает текст в число. Результат кладём в переменную seat (номер места, например 17)."],
+["if seat < 1 or seat > 30","or = «или». Плохо, если номер меньше 1 ИЛИ больше 30. Тогда мест с таким номером нет."],
+["return 0","return — «закончи функцию и верни значение». Тут функция сразу заканчивается и возвращает 0 (билет не продан). Остальной код ниже не выполняется."],
+["index = seat - 1","index — номер ячейки в списке. Пользователь вводит место от 1 до 30, а списки Python начинаются с 0, поэтому отнимаем 1. Место 17 → index = 16."],
+["if seats[index] == 1","1 = место уже продано. Если ячейка равна 1 — сообщаем «Бұл орын бұрын сатылған» и выходим через return 0."],
+["if seat >= 1 and seat <= 10","and = «и»: оба условия сразу. Места 1–10 стоят 1500."],["elif seat >= 11","elif = «а если нет, то проверь…». Места 11–20 — 2000."],
+["price = ","= НЕ «равно» из математики: «положи значение справа в переменную слева». Здесь запоминаем цену билета."],
+["seats[index] = 1","Записываем в ячейку index списка seats число 1: место теперь продано."],
+["ticket_count[index] = 1","В эту же ячейку второго списка пишем 1 — один билет."],
+["paid_money[index] = price","В третий список пишем цену. Теперь для места видно: продано, 1 билет, сколько заплатили."],
+["return price","Функция заканчивается и возвращает цену. В основном коде это число нигде не сохраняется."],
+["money = paid_money[index]","Сначала ЗАПОМИНАЕМ, сколько заплатили, и только потом стираем. Иначе сумма потеряется."],
+["seats[index] = 0","Стираем: ставим 0 — место снова свободно (и его можно купить заново)."],["ticket_count[index] = 0","Обнуляем число билетов."],["paid_money[index] = 0","Обнуляем деньги за это место."],
+["return money","Возвращаем сумму, которую вернули клиенту."],
+["return\n","Пустой return просто завершает функцию, значения нет."],
+["if seats[index] == 0","0 = место свободно. Для возврата — нечего возвращать, пишем «Бұл орын бос»."],
+["sold = 0","Счётчики для цикла: сначала все нули. sold — сколько билетов продано."],["free = 0","free — сколько мест свободно."],["money = 0","money — сколько всего денег собрали."],["sector1 = 0","sector1/2/3 — сколько продано в секторах 1–10, 11–20, 21–30."],
+["if seats[i] == 1","Место i продано? Если да — считаем."],["sold += 1","+= 1 — «прибавь 1». То же, что sold = sold + 1."],
+["money += paid_money[i]","То же, что money = money + paid_money[i]. Так мы сами складываем деньги — sum() нельзя."],
+["if i + 1 >= 1 and i + 1 <= 10","i — индекс, место = i + 1. Если место 1–10 — прибавляем к sector1."],["free += 1","Место свободно — прибавляем к free."],
+["if sector1 >= sector2 and sector1 >= sector3","Сами ищем наибольший сектор: sector1 не меньше обоих других? Так мы заменяем max()."],
+["popular_sector = ","В переменную пишем название самого популярного сектора (текст)."],
+["seats = [0","Создаём список из 30 нулей: все места свободны."],["ticket_count = [0","Второй список из 30 нулей: билетов пока нет."],["paid_money = [0","Третий список из 30 нулей: денег нет."],
+["while True","Бесконечный цикл: меню повторяется снова и снова, пока не выполнится break."],
+["choice = int(input","Читаем выбор пользователя (1–6) и превращаем в число."],
+["if choice == 1","if/elif/else — цепочка: Python проверяет сверху вниз и выполняет ТОЛЬКО первую подошедшую ветку. Выбор 1 → show_seats."],
+["show_seats(seats)","Вызываем функцию. В скобках — настоящий список, который попадёт в параметр seats."],
+["buy_ticket(seats, ticket_count","Вызов: передаём три настоящих списка функции. Она их изменит. Результат return здесь не сохраняется."],
+["return_ticket(seats, ticket_count","Вызов возврата билета."],["seat_info(seats, ticket_count","Вызов информации о месте."],["cash_report(seats, ticket_count","Вызов отчёта кассы."],
+["break","break — полностью выйти из цикла while. Программа заканчивается."],["print(\"Қате таңдау","else: сработает при любом выборе, кроме 1–6."],
+["print(","print() выводит текст/значения на экран."],["elif","elif — «а если нет, то…»."]];
+// Слова и знаки
+const TK={def:"def — создаёт свою функцию.",return:"return — завершить функцию и вернуть значение.","if":"if — «если». Выполнить блок, только если условие верно.",elif:"elif — «а если нет, то…». Проверяется, только когда предыдущие if/elif не сработали.",else:"else — «иначе», когда ничего не подошло.","for":"for — повторить действие для каждого значения.","while":"while — повторять, пока условие верно.","break":"break — полностью выйти из цикла.","in":"in — «из»: в for i in range(30) i берёт значения из range(30) по очереди.",range:"range(30) — числа 0,1,…,29 (30 не входит).",input:"input() — спросить у пользователя; всегда возвращает текст.",int:"int() — превращает текст в целое число.",print:"print() — вывести на экран.",True:"True — «истина», условие всегда верно, поэтому while True никогда не кончается сам.","=":"= — «положи значение справа в переменную слева». Это не «равно» из математики.","==":"== — «равно?». Сравнивает две вещи и даёт True или False.","+=":"+= — «прибавь». sold += 1 то же, что sold = sold + 1.",">=":">= — «больше или равно».","<=":"<= — «меньше или равно».",and:"and — «и»: оба условия должны быть верны.",or:"or — «или»: достаточно одного.",index:"index — переменная: номер ячейки в списке. Python считает ячейки с 0, поэтому index = seat − 1.",seat:"seat — номер места, который ввёл человек (1–30).",seats:"seats — список из 30 ячеек: 0 — свободно, 1 — продано.",ticket_count:"ticket_count — список: сколько билетов продано на каждое место.",paid_money:"paid_money — список: сколько денег заплачено за каждое место.",price:"price — цена билета.",money:"money — деньги (сумма возврата или общая касса).",sold:"sold — сколько мест продано.",free:"free — сколько мест свободно.",choice:"choice — выбор пользователя в меню.",i:"i — просто имя счётчика цикла: i=0 место 1, i=29 место 30.","-":"− — вычитание.","+":"+ — сложение.","<":"< — «меньше».",">":"> — «больше».","[":"[ ] — квадратные скобки: достать ячейку списка по номеру. seats[16] — ячейка №16 (место 17).",list:"list (список) — ряд ячеек с номерами 0,1,2… Например seats.",parameter:"parameter (параметр) — имя в def, например seats в def show_seats(seats).",argument:"argument (аргумент) — настоящее значение, переданное при вызове: show_seats(seats)."};
+const GL=["def","return","if","elif","else","for","while","break","input","int","print","list","index","parameter","argument","=","==","+=",">=","<=","and","or"];
+const pre=$("pre");let cur=-1;
+CODE.forEach((l,k)=>{const d=document.createElement("span");d.className="ln";const ind=l.match(/^ */)[0],rest=l.slice(ind.length);
+d.innerHTML=`<i>${k+1}</i>`+ind+rest.split(/("[^"]*"|[A-Za-z_]\w*|\d+|[<>=+]=|\S)/).map(p=>{if(!p)return"";if(!p.trim())return p;const c=p[0]=='"'?"st":/^\d/.test(p)?"nm":/^(def|return|for|in|if|elif|else|while|break|and|or|True)$/.test(p)?"kw":"";return `<b class="t ${c}" style="font-weight:400" data-w="${esc(p).replace(/"/g,"&quot;")}">${esc(p)}</b>`}).join("");
+d.onclick=e=>{const w=e.target.dataset&&e.target.dataset.w;pick(k,w,e.target)};pre.appendChild(d)});
+function lineExp(k){const t=CODE[k].trim();if(!t)return null;const a=LE.find(e=>t.includes(e[0].trim()));return a&&a[1]}
+function pick(k,w,el){document.querySelectorAll(".ln.on").forEach(x=>x.classList.remove("on"));document.querySelectorAll(".t.s").forEach(x=>x.classList.remove("s"));pre.children[k].classList.add("on");
+let h=`<code>${esc(CODE[k].trim())}</code><p>${lineExp(k)||'<span class="mu">Пустая строка или продолжение списка/вызова. Нажми соседнюю строку.</span>'}</p>`;
+if(w){el.classList.add("s");const raw=w.replace(/&quot;/g,'"').replace(/&amp;/g,"&").replace(/&lt;/g,"<");let m=TK[raw];if(CODE[k].includes("index = seat - 1")&&["seat","-","1"].includes(raw))m="seat − 1: человек вводит место 1–30, а список Python начинается с индекса 0. Поэтому отнимаем 1: место 17 → index = 16.";else if(/^\d+$/.test(raw))m="Число "+raw+". Просто значение.";else if(raw[0]=='"')m="Текст в кавычках: это просто надпись, Python её не вычисляет.";
+h+=`<p style="border-top:1px solid var(--bd);padding-top:8px">👉 <b>${esc(raw)}</b> — ${m||"имя или знак из кода (имя придумал автор программы)."}</p>`}
+$("ex").innerHTML=h}
+// Списки
+let B={S:Array(30).fill(0),T:Array(30).fill(0),P:Array(30).fill(0)};
+function seed(){[4,16,22,25].forEach(i=>{B.S[i]=1;B.T[i]=1;B.P[i]=i<10?1500:i<20?2000:2500})}seed();
+const price=n=>n<=10?1500:n<=20?2000:2500;
+function tab(sn,hi,box){let h="<table><tr><th>место</th>"+sn.S.map((_,i)=>`<td class="z ${hi===i?'sel':''}" onclick="sel(${i})"><b>${i+1}</b></td>`).join("")+"</tr>";
+[["seats","S"],["ticket_count","T"],["paid_money","P"]].forEach(r=>h+=`<tr><th>${r[0]}</th>`+sn[r[1]].map((v,i)=>`<td class="${v?'sold':''} ${hi===i?'h':''}">${v}</td>`).join("")+"</tr>");
+h+="<tr><th>индекс</th>"+sn.S.map((_,i)=>`<th>${i}</th>`).join("")+"</tr></table>";$(box).innerHTML=h}
+function sel(i){tab(B,i,"lt");$("li").innerHTML=`Место <b>${i+1}</b>. В списке Python это индекс <b>${i}</b>, поэтому программа пишет <code>[${i}]</code> (<code>index = ${i+1} - 1</code>).<br><code>seats[${i}] = <span class="v">${B.S[i]}</span></code> · <code>ticket_count[${i}] = <span class="v">${B.T[i]}</span></code> · <code>paid_money[${i}] = <span class="v">${B.P[i]}</span></code><br>${B.S[i]?"Место продано.":"Место свободно (цена была бы "+price(i+1)+" тг)."}`}
+// Пошаговая работа
+let steps=[],si=0;const cp=()=>({S:[...B.S],T:[...B.T],P:[...B.P]});
+const ln=s=>CODE.findIndex(l=>l.includes(s));
+function go(kind){const n=parseInt($("sn").value);if(isNaN(n))return;steps=[];const b=kind=="buy";const f=b?"def buy_ticket":"def return_ticket";const st=(s,t,x,hi)=>steps.push({l:s,t,x,hi,s:cp()});
+st(b?"buy_ticket(seats, ticket_count":"return_ticket(seats, ticket_count",b?"Выбран пункт 2 → вызван buy_ticket":"Выбран пункт 3 → вызван return_ticket","Главный цикл передал функции три списка.");
+st("seat = int(input",`Пользователь ввёл ${n}`,`seat = ${n}`);
+const i0=ln(f);const sec=CODE.findIndex((l,k)=>k>i0&&l.includes("if seat < 1 or seat > 30"));
+if(n<1||n>30){steps.push({l:CODE[sec].trim(),t:"Проверка диапазона",x:`${n} < 1 или ${n} > 30 → верно. Печатаем ошибку.`,hi:null,s:cp()});steps.push({l:"return 0",t:"return 0",x:"Функция сразу закончилась и вернула 0. Списки не изменились.",hi:null,s:cp()})}
+else{const ix=n-1;steps.push({l:CODE[sec].trim(),t:"Проверка диапазона",x:`${n} в пределах 1–30 → идём дальше.`,hi:null,s:cp()});st("index = seat - 1",`index = ${n} − 1`,`index = ${ix}. Это номер ячейки в списках.`,ix);
+if(b){if(B.S[ix]==1){st("if seats[index] == 1",`seats[${ix}] == 1?`,`Да, там 1 — место продано. Печатаем «Бұл орын бұрын сатылған» и return 0. Списки не изменились.`,ix)}
+else{st("if seats[index] == 1",`seats[${ix}] == 1?`,`Нет, там 0 — место свободно, идём дальше.`,ix);const p=price(n);st(n<=10?"if seat >= 1 and seat <= 10":n<=20?"elif seat >= 11":"else:\n        price",`Определяем цену`,`Место ${n} попадает в ${n<=10?"1–10":n<=20?"11–20":"21–30"} → price = ${p}`,ix);B.S[ix]=1;st("seats[index] = 1",`seats[${ix}] = 1`,"Место помечено как проданное.",ix);B.T[ix]=1;st("ticket_count[index] = 1",`ticket_count[${ix}] = 1`,"Записали число билетов.",ix);B.P[ix]=p;st("paid_money[index] = price",`paid_money[${ix}] = ${p}`,"Записали, сколько заплатили.",ix);st("return price","Билет продан ✅",`return ${p}: функция закончилась. Данные в списках изменились.`,ix)}}
+else{if(B.S[ix]==0){st("if seats[index] == 0",`seats[${ix}] == 0?`,"Да, место свободно — возвращать нечего. «Бұл орын бос», return 0.",ix)}
+else{st("if seats[index] == 0",`seats[${ix}] == 0?`,"Нет, там 1 — билет есть, идём дальше.",ix);const m=B.P[ix];st("money = paid_money[index]",`money = paid_money[${ix}]`,`Сначала запомнили сумму: money = ${m}.`,ix);B.S[ix]=0;st("seats[index] = 0",`seats[${ix}] = 0`,"Место свободно.",ix);B.T[ix]=0;st("ticket_count[index] = 0",`ticket_count[${ix}] = 0`,"Билетов нет.",ix);B.P[ix]=0;st("paid_money[index] = 0",`paid_money[${ix}] = 0`,"Деньги стёрты. Место можно купить снова.",ix);st("return money","Билет возвращён ✅",`return ${m}: клиенту вернули ${m} тг.`,ix)}}}
+si=0;$("rs").style.display="block";sh()}
+function mv(x){si=Math.max(0,Math.min(steps.length-1,si+x));sh()}
+function sh(){const s=steps[si];$("rn").textContent=`Шаг ${si+1} из ${steps.length}`;$("rt").textContent=s.t;$("rx").textContent=s.x;$("rc").textContent=s.l.replace(/\n\s+/g," ");tab(s.s,s.hi,"lt");}
+function rst(){B={S:Array(30).fill(0),T:Array(30).fill(0),P:Array(30).fill(0)};seed();steps=[];$("rs").style.display="none";tab(B,-1,"lt")}
+// Касса
+let ci=-1;function cs(d){ci=d<-5?-1:Math.min(29,ci+d);let a=0,f=0,m=0,x=[0,0,0];for(let i=0;i<=ci;i++){if(B.S[i]==1){a++;m+=B.P[i];x[i<10?0:i<20?1:2]++}else f++}
+let h=ci<0?"Нажми «Следующее место». Все счётчики сначала 0.":`<b>i = ${ci}</b> → место ${ci+1}. <code>seats[${ci}] = ${B.S[ci]}</code> → ${B.S[ci]?"продано: sold += 1, money += "+B.P[ci]+", сектор +1":"свободно: free += 1"}`;
+h+=`<p>sold=<span class="v">${a}</span> free=<span class="v">${f}</span> money=<span class="v">${m}</span><br>sector1=<span class="v">${x[0]}</span> sector2=<span class="v">${x[1]}</span> sector3=<span class="v">${x[2]}</span></p>`;
+if(ci==29){const p=x[0]>=x[1]&&x[0]>=x[2]?"1-10":x[1]>=x[0]&&x[1]>=x[2]?"11-20":"21-30";h+=`Цикл закончен. Сравниваем сектора сами (вместо max()): <b>${p}</b>.`}
+$("co").innerHTML=h}
+// Меню
+const MN=[["1 — Бос орындарды көрсету","choice = 1 → if choice == 1 → show_seats(seats) → печатает все 30 мест → снова меню."],["2 — Билет сатып алу","choice = 2 → elif choice == 2 → buy_ticket(seats, ticket_count, paid_money) → меняет 3 списка → снова меню."],["3 — Билетті қайтару","choice = 3 → elif choice == 3 → return_ticket(...) → очищает ячейки → снова меню."],["4 — Орын туралы ақпарат","choice = 4 → elif choice == 4 → seat_info(...) → печатает статус и цену → снова меню."],["5 — Касса есебі","choice = 5 → elif choice == 5 → cash_report(...) → цикл считает sold, free, money, секторы → снова меню."],["6 — Шығу","choice = 6 → elif choice == 6 → печатает «Бағдарлама аяқталды.» → break → цикл закончился → конец программы."],["7 (другое)","choice = 7 → ни одно условие не подошло → else → «Қате таңдау.» → снова меню."]];
+$("mb").innerHTML=MN.map((m,i)=>`<button class="btn g" onclick="$('mo').innerHTML='${m[1].replace(/'/g,"\\'")}'">${m[0]}</button>`).join("");
+// Функции
+const FN=[["show_seats(seats)","Получает seats. Ничего не меняет, только печатает «Бос/Сатылған» для каждого места. Ничего не возвращает."],["buy_ticket(seats, ticket_count, paid_money)","Получает все три списка. Спрашивает номер, проверяет, считает цену и записывает в три списка. Возвращает price или 0."],["return_ticket(seats, ticket_count, paid_money)","Получает три списка. Запоминает сумму, обнуляет три ячейки. Возвращает money или 0."],["seat_info(seats, ticket_count, paid_money)","Получает три списка, только читает и печатает. Голый return — просто выход."],["cash_report(seats, ticket_count, paid_money)","Получает три списка, в цикле считает sold, free, money, секторы и печатает отчёт."]];
+$("fn").innerHTML=FN.map(f=>`<div class="cd"><b><code>${f[0]}</code></b><p>${f[1]}</p></div>`).join("")+`<div class="cd"><b>return 0</b> = «функция закончила работу, значение 0». <b>return price</b> = «значение цены». Список, который передали в функцию, изменяется «на месте» — поэтому после buy_ticket в основном списке seats правда лежит 1, хотя return этого не передаёт.</div>`;
+// Объяснить всё
+const AL=[["1. Создание функций","Сначала Python запоминает 5 команд (def). Они пока НЕ выполняются — только создаются."],["2. Создание списков","seats, ticket_count, paid_money: по 30 нулей. Это «память» кинотеатра."],["3. Запуск главного цикла","while True — бесконечный цикл. С этого места программа реально работает."],["4. Показ меню","print печатает 6 пунктов меню."],["5. Выбор пользователя","choice = int(input(...)) — человек вводит число."],["6. Вызов нужной функции","if/elif сверху вниз ищет подходящее число и вызывает функцию, передавая три списка."],["7. Работа функции","Функция читает/меняет списки по индексу seat − 1 и печатает результат."],["8. Возвращение в меню","Функция закончилась, цикл идёт на следующий круг — меню снова."],["9. Выход через break","Выбрали 6 → break → цикл закончился → программа завершена."]];
+let ai=0;function al(d){ai=Math.max(0,Math.min(AL.length-1,ai+d));$("at").textContent=AL[ai][0];$("ax").textContent=AL[ai][1]}al(0);
+// Проверка
+const Q=[["index = seat - 1",["index получает случайное число","index получает позицию места в списке","index хранит цену билета","index хранит количество билетов"],1,"seat — номер места 1–30, а списки считают с 0. index — номер ячейки."],
+["seats[index] = 1",["Читает ячейку","Помечает место как проданное","Вычисляет цену","Печатает билет"],1,"= записывает 1 в ячейку index списка seats."],
+["money += paid_money[i]",["money = money + paid_money[i]: складываем деньги","money стирается","money делится","money сравнивается"],0,"Так мы вручную считаем сумму вместо sum()."],
+["while True:",["Цикл выполнится один раз","Цикл повторяется, пока не будет break","Цикл не выполнится","Цикл идёт 30 раз"],1,"True всегда верно, выход только через break."],
+["money = paid_money[index]",["Стирает деньги","Запоминает сумму до стирания","Считает цену","Вводит место"],1,"Если сначала обнулить ячейку, сумма возврата потеряется."],
+["if sector1 >= sector2 and sector1 >= sector3:",["Ищет самый популярный сектор без max()","Считает деньги","Проверяет место","Выходит из цикла"],0,"Вручную сравниваем три числа."],
+["if seat < 1 or seat > 30:",["Проверка, что место существует","Выбор цены","Проверка продажи","Конец программы"],0,"or: плохо, если меньше 1 ИЛИ больше 30."],
+["for i in range(30):",["i = 1…30","i = 0…29","i = 0…30","i = 30"],1,"30 не входит; i — индекс, место = i + 1."]];
+let qi=0,qs=0,qa=0;function nq(){qi=(qi+1)%Q.length;dq()}
+function dq(){const q=Q[qi];$("qs").textContent=`Вопрос ${qi+1}/${Q.length} · счёт ${qs}/${qa}`;$("qc").textContent=q[0];$("qf").innerHTML="";$("qn").style.display="none";$("qo").innerHTML=q[1].map((o,i)=>`<button class="opt" onclick="an(${i},this)">${"ABCD"[i]}) ${o}</button>`).join("")}
+function an(i,b){const q=Q[qi];if($("qf").innerHTML)return;qa++;if(i==q[2]){qs++;b.classList.add("r")}else{b.classList.add("w");$("qo").children[q[2]].classList.add("r")}$("qf").innerHTML=`<p>${i==q[2]?"✅ Верно.":"❌ Неверно."} ${q[3]}</p>`;$("qs").textContent=`Вопрос ${qi+1}/${Q.length} · счёт ${qs}/${qa}`;$("qn").style.display="inline-block"}dq();
+// Вопросы
+const TQ=[["Почему список начинается с 0?","Так устроен Python: первая ячейка — номер 0.","Python нумерует ячейки списка с нуля: первая — [0], последняя из 30 — [29]."],["Зачем index = seat - 1?","Человек говорит «место 17», а ячейка — [16].","Номер места начинается с 1, индекс списка с 0, поэтому отнимаем 1."],["Зачем три списка?","Один — «занято?», второй — «сколько билетов», третий — «сколько денег».","Условие требует хранить статус, число билетов и сумму для каждого места."],["Что делает seats[index] = 1?","Запись в ячейку.","Помечает место index как проданное."],["Почему цена через if/elif/else?","Три диапазона мест.","Условие проверяется сверху вниз: 1–10, 11–20, иначе 21–30."],["Что делает +=?","Прибавляет к самому себе.","sold += 1 то же, что sold = sold + 1."],["Почему здесь for?","Нужно пройти по всем 30 местам.","Мы знаем число повторов (30), for удобен."],["Почему меню через while?","Меню должно повторяться.","while True повторяет меню, пока не выберут 6."],["Что делает break?","Выход из цикла.","Полностью выходит из while — программа заканчивается."],["Зачем return?","Закончить функцию и вернуть значение.","return 0 — ошибка, return price/money — результат. В основном коде он не сохраняется."],["Почему нельзя max()?","Так сказано в условии.","Поэтому сравниваем сектора вручную через if/elif/else и считаем через циклы."],["Что будет, если место уже продано?","seats[index] == 1.","Напечатается «Бұл орын бұрын сатылған», вернётся 0, списки не изменятся."],["Что будет после возврата билета?","Три ячейки обнуляются.","seats, ticket_count, paid_money в index = 0. Место свободно."],["Почему после возврата место можно купить снова?","Там снова 0.","Проверка seats[index] == 1 даст «нет», билет продаётся заново."],["Что значит paid_money[index]?","Ячейка третьего списка.","Сумма, заплаченная за место index."],["Индекс и номер места — это одно и то же?","Нет.","Номер места 1–30 (для людей), индекс 0–29 (для списка). Индекс = номер − 1."]];
+$("tq").innerHTML=TQ.map((t,i)=>`<div class="cd q" onclick="this.dataset.s=(+this.dataset.s||0)+1;this.classList.toggle('o',this.dataset.s>=2&&this.dataset.s%2==0);this.querySelector('.h').style.display=this.dataset.s%2==1?'block':'none'"><b>${i+1}. ${t[0]}</b><div class="h mu" style="display:none;margin-top:6px">💡 ${t[1]}</div><div class="a">✅ ${t[2]}</div></div>`).join("");
+tab(B,-1,"lt");
+</script></body></html>
